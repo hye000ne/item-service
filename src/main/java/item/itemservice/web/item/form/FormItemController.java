@@ -1,4 +1,4 @@
-package item.itemservice.web.item.basic;
+package item.itemservice.web.item.form;
 
 import item.itemservice.domain.item.Item;
 import item.itemservice.domain.item.ItemRepository;
@@ -12,9 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/basic/items")
+@RequestMapping("/form/items")
 @RequiredArgsConstructor
-public class BasicItemController {
+public class FormItemController {
     private final ItemRepository itemRepository;
 
     @GetMapping
@@ -22,7 +22,7 @@ public class BasicItemController {
         List<Item> items = itemRepository.findAll();
         model.addAttribute("items", items);
 
-        return "basic/items";
+        return "form/items";
     }
 
     @GetMapping("/{itemId}")
@@ -30,12 +30,12 @@ public class BasicItemController {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
 
-        return "basic/item";
+        return "form/item";
     }
 
     @GetMapping("/add")
     public String addForm(Model model){
-        return "basic/addForm";
+        return "form/addForm";
     }
 
     @PostMapping("/add")
@@ -45,7 +45,7 @@ public class BasicItemController {
         redirectAttributes.addAttribute("itemId", saveditem.getId());
         redirectAttributes.addAttribute("status", true);
 
-        return "redirect:/basic/items/{itemId}";
+        return "redirect:/form/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
@@ -53,22 +53,13 @@ public class BasicItemController {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
 
-        return "basic/editForm";
+        return "form/editForm";
     }
 
     @PostMapping("/{itemId}/edit")
     public String edit(@ModelAttribute Item updateParam, @PathVariable Long itemId){
         itemRepository.update(itemId, updateParam);
 
-        return "redirect:/basic/items/{itemId}";
-    }
-
-    /**
-     * 테스트용 데이터 추가
-     */
-    @PostConstruct
-    public void init(){
-        itemRepository.save(new Item("testA", 1000, 1));
-        itemRepository.save(new Item("testB", 3000, 5));
+        return "redirect:/form/items/{itemId}";
     }
 }
