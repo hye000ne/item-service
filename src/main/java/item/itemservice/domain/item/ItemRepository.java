@@ -32,6 +32,10 @@ public class ItemRepository {
         savedItem.setItemName(updateParam.getItemName());
         savedItem.setPrice(updateParam.getPrice());
         savedItem.setQuantity(updateParam.getQuantity());
+        savedItem.setOpen(updateParam.getOpen());
+        savedItem.setRegions(updateParam.getRegions());
+        savedItem.setItemType(updateParam.getItemType());
+        savedItem.setDeliveryCode(updateParam.getDeliveryCode());
 
         return savedItem.getId();
     }

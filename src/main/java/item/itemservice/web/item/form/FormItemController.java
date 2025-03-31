@@ -4,6 +4,7 @@ import item.itemservice.domain.item.Item;
 import item.itemservice.domain.item.ItemRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/form/items")
 @RequiredArgsConstructor
@@ -35,11 +37,14 @@ public class FormItemController {
 
     @GetMapping("/add")
     public String addForm(Model model){
+        model.addAttribute("item", new Item());
+
         return "form/addForm";
     }
 
     @PostMapping("/add")
     public String add(@ModelAttribute Item item, RedirectAttributes redirectAttributes){
+        log.info("item.open={}", item.getOpen());
 
         Item saveditem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", saveditem.getId());
