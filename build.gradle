@@ -39,4 +39,9 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'file.encoding', 'UTF-8' // 테스트 환경에 UTF-8 강제 적용
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8' // 자바 컴파일 시 UTF-8 강제 적용
 }
