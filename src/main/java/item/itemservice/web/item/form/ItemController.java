@@ -4,36 +4,34 @@ import item.itemservice.domain.item.DeliveryCode;
 import item.itemservice.domain.item.Item;
 import item.itemservice.domain.item.ItemRepository;
 import item.itemservice.domain.item.ItemType;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j // 로그를 사용할 수 있게 해주는 Lombok 어노테이션 (log.info 등 사용 가능)
 @Controller // 해당 클래스가 Spring MVC 컨트롤러임을 나타냄
-@RequestMapping("/form/items") // 공통 URL 경로 설정
+@RequestMapping("/items") // 공통 URL 경로 설정
 @RequiredArgsConstructor // 생성자 주입을 Lombok이 자동 생성해줌
-public class FormItemController {
+public class ItemController {
 
     private final ItemRepository itemRepository; // 생성자 주입
+    private final MessageSource messageSource;
 
     /**
      * 모든 요청에서 "regions"라는 이름으로 등록 지역 맵을 모델에 추가함
      */
     @ModelAttribute("regions")
-    public Map<String, String> regions() {
+    public Map<String, String> regions(Locale locale) {
         Map<String, String> regions = new LinkedHashMap<>();
-        regions.put("SEOUL", "서울");
-        regions.put("BUSAN", "부산");
-        regions.put("JEJU", "제주");
+        regions.put("SEOUL", messageSource.getMessage("region.seoul",null, locale));
+        regions.put("BUSAN", messageSource.getMessage("region.busan",null, locale));
+        regions.put("JEJU", messageSource.getMessage("region.jeju",null, locale));
 
         return regions;
     }
@@ -50,11 +48,12 @@ public class FormItemController {
      * 배송 옵션 리스트를 모델에 추가
      */
     @ModelAttribute("deliveryCodes")
-    public List<DeliveryCode> deliveryCodes(){
+    public List<DeliveryCode> deliveryCodes(Locale locale){
         List<DeliveryCode> deliveryCodes = new ArrayList<>();
-        deliveryCodes.add(new DeliveryCode("FAST","빠른 배송"));
-        deliveryCodes.add(new DeliveryCode("NORMAL","일반 배송"));
-        deliveryCodes.add(new DeliveryCode("SLOW","느린 배송"));
+        deliveryCodes.add(new DeliveryCode("FAST", messageSource.getMessage("deliveryCode.fast",null, locale)));
+        deliveryCodes.add(new DeliveryCode("NORMAL",messageSource.getMessage("deliveryCode.normal",null, locale)));
+        deliveryCodes.add(new DeliveryCode("SLOW",messageSource.getMessage("deliveryCode.slow",null, locale)));
+
         return deliveryCodes;
     }
 
@@ -101,7 +100,7 @@ public class FormItemController {
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
 
-        return "redirect:/form/items/{itemId}";
+        return "redirect:/items/{itemId}";
     }
 
     /**
@@ -120,6 +119,6 @@ public class FormItemController {
     @PostMapping("/{itemId}/edit")
     public String edit(@ModelAttribute Item updateParam, @PathVariable Long itemId){
         itemRepository.update(itemId, updateParam);
-        return "redirect:/form/items/{itemId}";
+        return "redirect:/items/{itemId}";
     }
 }

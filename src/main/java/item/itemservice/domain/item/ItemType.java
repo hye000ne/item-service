@@ -1,15 +1,21 @@
 package item.itemservice.domain.item;
 
+import item.itemservice.message.MessageUtils;
+
 public enum ItemType {
-    BOOK("도서"), FOOD("음식"), ETC("기타");
+    BOOK("itemType.BOOK"), FOOD("itemType.FOOD"), ETC("itemType.ETC");
 
-    private final String description;
+    private final String messageKey;
 
-    ItemType(String description) {
-        this.description = description;
+    ItemType(String messageKey) {
+        this.messageKey = messageKey;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMessageKey() {
+        return messageKey;
+    }
+
+    public String getMessage(String messageKey){
+        return MessageUtils.get(messageKey);
     }
 }
